@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+*{
+    font-family: "Poppins", sans-serif;
+    scroll-behavior: smooth;
+}
+#searchBar::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+#searchBar {
+  -moz-appearance: none;
+}
+.navidatorItemLine {
+  transition: all 0.2s ease-in-out;
+  width: 0%;
+  
+}
+.navidatorItem:hover .navidatorItemLine{
+  width: 100%;
+}
