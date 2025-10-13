@@ -3,7 +3,7 @@
 function Input(props) {
     
   return (
-    <div>
+    <div className="flex w-full flex-col">
       <label htmlFor={props.id} className="block text-gray-300 text-sm font-medium mb-2">
         {props.label}
       </label>

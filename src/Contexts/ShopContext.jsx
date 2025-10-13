@@ -1,67 +1,93 @@
-import React, { createContext, useContext, useState } from "react";
-import products from "../media/ProductApi";
+import React, { createContext, useContext, useEffect, useState } from "react";
+// import products from "../media/ProductApi";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useProfile } from "./ProfileContext";
+import cartService from "../services/cartService";
+import productService from "../services/productService";
 
 const ShopContext = createContext();
 
 export const ShopApi = ({ children }) => {
+  let { getProfileData } = useProfile();
   const [cart, setCart] = useState([]);
-  const [data, setdata] = useState(products.All);
+  const [data, setdata] = useState();
+  const [totalPrice, setTotalPrice] = useState();
 
-  const addToCart = (e) => {
-    console.log(e);
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:5000/api",
+    withCredentials: true,
+  });
 
-    setCart((Prev) => {
-      const exist = Prev.find((i) => i.productId === e.productId);
-      if (exist) {
-        // product already exists → increase quantity
-
-        return Prev.map((item) =>
-          item.productId === e.productId
-            ? {
-                ...item,
-                quantity: item.quantity + 1,
-                cost: (item.quantity + 1) * item.productPrice,
-              }
-            : item
-        );
-      }
-
-      return [...Prev, { ...e, quantity: 1, cost: e.productPrice }];
-    });
+  const loadCart = async () => {
+    try {
+      const data = await cartService.getCart();
+      setTotalPrice(data?.totalAmount);
+      setCart(data.items);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
- const RemoveFromCart = (product) => {
-  setCart((prevCart) => {
-    const existing = prevCart.find((item) => item.productId === product.productId);
-    if (!existing) return prevCart; // nothing to remove
+  const deleteCart = async (cartItem) => {
+    try {
+      const { data: res } = await axiosInstance.post("/cart/delete", cartItem);
+      loadCart();
+      toast.success("deleted Item!");
+    } catch (err) {
+      console.error("Add to cart error:", err);
+      toast.error("Failed to delete item in cart.");
+    }
+  };
 
-    if (existing.quantity === 1) {
-      return prevCart.filter((item) => item.productId !== product.productId);
-    } // if quantity = 1 → remove item entirely
-     //
-    // otherwise decrease quantity
-    return prevCart.map((item) =>
-      item.productId === product.productId
-        ? {
-            ...item,
-            quantity: item.quantity - 1,
-            cost: (item.quantity - 1) * item.productPrice, // recalc cost
-          }
-        : item
-    );
-  });
-};
+  useEffect(() => {
+    fetchAllProducts();
+    loadCart();
+  }, []);
+  const fetchAllProducts = async () => {
+    try {
+      const data = await productService.getAllProducts();
+      setdata(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const addToCart = async (cartItem) => {
+    try {
+      await cartService.addToCart(cartItem);
+      toast.success("Item added to cart!");
+      await loadCart();
+    } catch (err) {
+      console.error("Add to cart error:", err);
+      toast.error("Failed to add item to cart.");
+    }
+  };
 
-const totalPrice = cart.reduce(
-    (acc, item) => acc + item.quantity * item.productPrice,
-    0
-  );
-
-  console.log(cart);
-
+  const RemoveFromCart = async (cartItem) => {
+    try {
+      await cartService.removeItem(cartItem);
+      await loadCart();
+      toast.success("Item removed from cart!");
+    } catch (err) {
+      console.error("Add to cart error:", err);
+      toast.error("Failed to remove item from cart.");
+    }
+  };
 
   return (
-    <ShopContext.Provider value={{ data, cart,setCart, addToCart, RemoveFromCart,totalPrice }}>
+    <ShopContext.Provider
+      value={{
+        data,
+        cart,
+        setCart,
+        addToCart,
+        RemoveFromCart,
+        totalPrice,
+        axiosInstance,
+        deleteCart,
+        loadCart,
+      }}
+    >
       {children}
     </ShopContext.Provider>
   );

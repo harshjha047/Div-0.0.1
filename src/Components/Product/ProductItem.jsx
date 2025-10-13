@@ -7,34 +7,65 @@ import { IoStar } from "react-icons/io5";
 
 function ProductItem() {
   const {ProductId}=useParams()
+    const navigator = useNavigate()
   const {data,cart,addToCart, RemoveFromCart}= useShop()
-  const product = data.find((e)=>e._id===ProductId)
+  const product = data?.find((e)=>e?._id===ProductId)
   
   const CartItem={
     productId:ProductId,
-    productName:product.name,
-    productPrice:product.new_price,
-    productColor:product.variants.filter((e)=>e.type=="color")[0]?.value,
-    productSize:product.variants.filter((e)=>e.type=="size")[0]?.value,
-    quantity: 0,
-    cost: 0,
+    productName:product?.name,
+    priceAtAddTime:product?.new_price,
+    selectedVariant:{
+      color:product?.variants.filter((e)=>e?.type=="color")[0]?.value,
+      size:product?.variants.filter((e)=>e?.type=="size")[0]?.value,
+    },
+    quantity: 1,
+    subtotal: product?.new_price,
   }
  
-  const [cartItem, setCartItem] = useState(CartItem)
+  const [cartItem, setCartItem] = useState(CartItem);
 
-  const handelChange=(e)=>{
-    const value = e.target.value
-    const name = e.target.name
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-    return setCartItem({...cartItem,[name]:value})
+  // If updating a variant (color/size)
+  if (name === "color" || name === "size") {
+    setCartItem((prev) => ({
+      ...prev,
+      selectedVariant: {
+        ...prev.selectedVariant,
+        [name]: value,
+      },
+    }));
   }
+  // If updating quantity
+  else if (name === "quantity") {
+    const quantity = Number(value); // convert to number
+    setCartItem((prev) => ({
+      ...prev,
+      quantity,
+      subtotal: quantity * prev.priceAtAddTime,
+    }));
+  } 
+  // For other flat fields
+  else {
+    setCartItem((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+};
+
 
   const [tog, setTog] = useState(true)
-  const average = product.reviews.length > 0? product.reviews.reduce((sum, num) => sum + num.rating, 0) / product.reviews.length: 0;
+  const average = product?.reviews?.length > 0? product?.reviews?.reduce((sum, num) => sum + num?.rating, 0) / product?.reviews?.length: 0;
 
-   const [units] = cart.filter((i)=>i.productId==ProductId)
-   console.log(units);
-   
+   const [units] = cart?.filter((i)=>i?.productId==ProductId)
+  //  console.log(units);
+   const BuyNow=()=>{
+    addToCart(cartItem)
+    navigator("/cart")
+   }
 
     
   return (<>
@@ -47,26 +78,26 @@ function ProductItem() {
       {/* <!-- Product Images --> */}
       <div className="lg:w-1/2">
         <div className="mb-4">
-          <img id="main-image" src="https://images-static.nykaa.com/media/catalog/product/f/4/f4bf23139749501_6.jpg?tr=w-500" alt={product.images[0].alt} className="w-full rounded-lg"/>
+          <img id="main-image" src={product?.images[0]?.url} alt={product?.images[0]?.alt} className="w-full rounded-lg"/>
         </div>
         
         {/* <!-- Thumbnail Images --> */}
         <div className="flex space-x-2">
-          {product.images.map((e,i)=>
-          <img src={e.url} alt={e.alt} key={i}  className="w-20 h-20 object-cover rounded-lg cursor-pointer border-2 border-blue-500"  />
+          {product?.images?.map((e,i)=>
+          <img src={e?.url} alt={e?.alt} key={i}  className="w-20 h-20 object-cover rounded-lg cursor-pointer border-2 border-blue-500"  />
           )}
         </div>
       </div>
 
       {/* <!-- Product Info --> */}
       <div className="lg:w-1/2 mt-8 lg:mt-0">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">{product.name}</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">{product?.name}</h1>
         
         {/* <!-- Price --> */}
         <div className="mb-6">
-          <span className="text-3xl font-bold text-white">₹ {product.new_price}</span>
-          <span className="text-lg text-gray-400 line-through ml-2">₹{product.old_price}</span>
-          <span className="bg-red-600 text-white px-2 py-1 rounded-full text-sm ml-2">{Math.round(-(((product.new_price/product.old_price)*100)-100))}% OFF</span>
+          <span className="text-3xl font-bold text-white">₹ {product?.new_price}</span>
+          <span className="text-lg text-gray-400 line-through ml-2">₹{product?.old_price}</span>
+          <span className="bg-red-600 text-white px-2 py-1 rounded-full text-sm ml-2">{Math.round(-(((product?.new_price/product?.old_price)*100)-100))}% OFF</span>
         </div>
 
         {/* <!-- Rating --> */}
@@ -78,19 +109,19 @@ function ProductItem() {
             <svg className={`w-5 h-5 fill-current ${average>=4?"text-yellow-400":""}`} viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
             <svg className={`w-5 h-5 fill-current ${average==5?"text-yellow-400":""}`} viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
           </div>
-          <span className="text-gray-400 ml-2">{average} ({product.reviews.length} reviews)</span>
+          <span className="text-gray-400 ml-2">{average} ({product?.reviews?.length} reviews)</span>
         </div>
 
         {/* <!-- Description --> */}
         <div className="mb-6">
-          <p className="text-gray-300">{product.description}</p>
+          <p className="text-gray-300">{product?.description}</p>
         </div>
 
         {/* <!-- Color Options --> */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-white mb-3">Color</h3>
           <div className="flex space-x-3">
-            {product.variants.map((e,i)=> e.type=="color" &&<button key={i} onChange={handelChange}  onClick={()=>setCartItem({...cartItem,productColor:e.value}) } name='productColor' value={e.value} className={`w-8 h-8 rounded-full bg-[${e.value}] border-2 hover:border-white ${cartItem.productColor == e.value?"border-white":"border-transparent"}`} style={{ backgroundColor: e.value }}></button>)}
+            {product?.variants?.map((e,i)=> e?.type=="color" &&<button key={i} onChange={handleChange}  onClick={()=>setCartItem({...cartItem,[selectedVariant.color]:e?.value}) } name='productColor' value={e?.value} className={`w-8 h-8 rounded-full bg-[${e?.value}] border-2 hover:border-white ${cartItem?.selectedVariant?.color == e?.value?"border-white":"border-transparent"}`} style={{ backgroundColor: e?.value }}></button>)}
           </div>
         </div>
 
@@ -98,7 +129,7 @@ function ProductItem() {
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-white mb-3">Size</h3>
           <div className="grid grid-cols-4 gap-2">
-            {product.variants.map((e,i)=> e.type=="size"&& <button key={i} onChange={handelChange} onClick={()=>setCartItem({...cartItem,productSize:e.value})} name='productSize' value={e.value} className={`${cartItem.productSize == e.value?"text-blue-500 border-blue-500 hover:text-gray-400":"border-gray-600 text-gray-400 hover:border-blue-500 hover:text-blue-500"} py-2 px-4 border rounded-lg`}>{e.value}</button>)}
+            {product?.variants?.map((e,i)=> e?.type=="size"&& <button key={i} onChange={handleChange} onClick={()=>setCartItem({...cartItem,[selectedVariant?.size]:e?.value})} name='productSize' value={e?.value} className={`${cartItem?.selectedVariant?.size == e?.value?"text-blue-500 border-blue-500 hover:text-gray-400":"border-gray-600 text-gray-400 hover:border-blue-500 hover:text-blue-500"} py-2 px-4 border rounded-lg`}>{e?.value}</button>)}
           </div>
         </div>
 
@@ -107,8 +138,11 @@ function ProductItem() {
           <h3 className="text-lg font-semibold text-white mb-3">Quantity</h3>
           <div className="flex items-center bg-gray-800 rounded-lg w-fit">
             <button className="px-4 py-2 text-white hover:bg-gray-700 rounded-l-lg" onClick={()=>{RemoveFromCart(cartItem)}}>-</button>
-            <span className="px-6 py-2 text-white">{units?units.quantity:"0"}</span>
-            <button className="px-4 py-2 text-white hover:bg-gray-700 rounded-r-lg" onClick={()=>{addToCart(cartItem)}}>+</button>
+            <span className="px-6 py-2 text-white">{units?units?.quantity:"0"}</span>
+            <button className="px-4 py-2 text-white hover:bg-gray-700 rounded-r-lg" onClick={()=>{
+              addToCart(cartItem) 
+              console.log(cartItem)
+            }}>+</button>
           </div>
         </div>
 
@@ -117,7 +151,7 @@ function ProductItem() {
           <button onClick={()=>{addToCart(cartItem)}} className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">
             Add to Cart
           </button>
-          <button className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700">
+          <button onClick={BuyNow} className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700">
             Buy Now
           </button>
         </div>
@@ -164,14 +198,14 @@ function ProductItem() {
       </div>
       {tog?<div className="py-8">
         <div className="text-gray-300 space-y-4">
-          <p>{product.description}</p>
+          <p>{product?.description}</p>
         </div>
       </div>: <div className="py-8">
         <div className="text-gray-300 space-y-4">
-          {product.reviews.map((e,i)=>
+          {product?.reviews?.map((e,i)=>
           <div key={i} className="w-full border  rounded-2xl p-4">
-            <div className="p-2 flex justify-between">{e.name} <span>Rate {e.rating} <div className="text-yellow-400 inline-block"><IoStar/></div></span></div>
-            <div className="border w-full rounded-md p-2">{e.comment}</div>
+            <div className="p-2 flex justify-between">{e?.name} <span>Rate {e?.rating} <div className="text-yellow-400 inline-block"><IoStar/></div></span></div>
+            <div className="border w-full rounded-md p-2">{e?.comment}</div>
           </div>
           )}
         </div>

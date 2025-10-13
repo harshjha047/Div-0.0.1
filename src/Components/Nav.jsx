@@ -7,12 +7,18 @@ import { IoIosSearch, IoMdClose } from "react-icons/io";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useShop } from "../Contexts/ShopContext.jsx";
+import { useProfile } from "../Contexts/ProfileContext.jsx";
+import { CiLogin } from "react-icons/ci";
 
 function Nav() {
   let { cart } = useShop();
+  const { getProfileData} = useProfile();
+
+  // console.log(cart);
+  
   let [searchBar, setSearchBar] = useState(false);
   return (
-    <div className=" shadow-lg bg-[#141D2D] h-[14vh] w-full  top-0 flex justify-center z-50 text-white">
+    <div className=" fixed shadow-lg bg-[#141D2D] h-[14vh] w-full  top-0 flex justify-center z-50 text-white">
       <div className="w-[90%] hidden justify-between sm:flex lg:flex ">
         <div className=" h-full flex items-center justify-end">
         <NavLink to={"/"}><Logo /></NavLink>
@@ -49,14 +55,14 @@ function Nav() {
           </div>
         <NavLink to={"/cart"}><Icon>
             <IoCartOutline />
-            {cart.length > 0 && (
+            {cart?.length > 0 && (
               <div className=" absolute h-3 w-3 text-[8px] font-semibold rounded-full top-1 bg-green-600 right-1 flex justify-center items-center ">
-                {cart.length}
+                {cart?.length}
               </div>
              )} 
           </Icon></NavLink>  
-          <Icon>
-           <NavLink to={"/auth"}> <HiOutlineUserCircle /></NavLink>
+          <Icon>{getProfileData?<NavLink to={"/profile/info"}> <HiOutlineUserCircle /></NavLink>:<NavLink to={"/auth"}> <CiLogin /></NavLink>}
+           
           </Icon>
         </div>
       </div>

@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
 import { useShop } from '../../Contexts/ShopContext';
+import { useProfile } from '../../Contexts/ProfileContext';
 
 function CartSummary() {
       let {cart,totalPrice } = useShop();
+
+
+      
 
   return (<>
          {/* <!-- Order Summary --> */}
@@ -12,7 +16,7 @@ function CartSummary() {
           
           <div className="space-y-3 mb-6">
             <div className="flex justify-between text-gray-300">
-              <span>Subtotal ({cart.length} items)</span>
+              <span>Subtotal ({cart?.length} items)</span>
               <span>₹{totalPrice}</span>
             </div>
             <div className="flex justify-between text-gray-300">
@@ -33,16 +37,6 @@ function CartSummary() {
           <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 mb-4">
             <a href="checkout.html" className="block">Proceed to Checkout</a>
           </button>
-
-          {/* <!-- Payment Methods --> */}
-          {/* <div className="text-center text-sm text-gray-400">
-            <p className="mb-2">We Accept:</p>
-            <div className="flex justify-center space-x-2">
-              <div className="bg-gray-700 px-2 py-1 rounded text-xs">VISA</div>
-              <div className="bg-gray-700 px-2 py-1 rounded text-xs">MC</div>
-              <div className="bg-gray-700 px-2 py-1 rounded text-xs">UPI</div>
-            </div>
-          </div> */}
         </div>
       </div>
       

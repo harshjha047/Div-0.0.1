@@ -12,7 +12,7 @@ function BreadCrump(props) {
       <span className="mx-2">|</span>
       <Link to={"/product"} className="hover:text-white">Products</Link>
       <span className="mx-2">|</span>
-      <span className="text-white">{product.name}</span>
+      <span className="text-white">{product?.name}</span>
     </nav>
   </div>
 

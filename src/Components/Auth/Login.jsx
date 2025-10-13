@@ -1,24 +1,45 @@
 import Input from "./Input";
 import { useFormik } from "formik";
 import { LoginSchema } from "./AuthSchema";
-
-const onSubmit = (values, actions) => {
-  console.log(values);
-  console.log(actions);
-  actions.resetForm();
-};
+import axios from "axios";
+import { useState } from "react";
+import { GoEyeClosed } from "react-icons/go";
+import { FaEye } from "react-icons/fa";
+import { useAuth } from "../../Contexts/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Login() {
-      const { values, handleChange,touched, handleBlur, isSubmitting, handleSubmit,errors } = useFormik({
-          initialValues: {
-            password: "",
-            email: "",
-          },
-          validationSchema: LoginSchema,
-          onSubmit,
-          
-        });
-        console.log(values)
+  const { axiosInstance, login } = useAuth();
+  const navigate = useNavigate();
+
+  const onSubmit = async (values, actions) => {
+    try {
+      actions.resetForm();
+      login(values);
+      toast.success("User Registered Successfully");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const {
+    values,
+    handleChange,
+    touched,
+    handleBlur,
+    isSubmitting,
+    handleSubmit,
+    errors,
+  } = useFormik({
+    initialValues: {
+      password: "",
+      email: "",
+    },
+    validationSchema: LoginSchema,
+    onSubmit,
+  });
+  const [eye, setEye] = useState(true);
 
   return (
     <div id="login-form" className="bg-gray-800 rounded-lg p-8 shadow-lg">
@@ -28,20 +49,73 @@ function Login() {
       </div>
 
       <form className="space-y-6" onSubmit={handleSubmit} autoComplete="off">
-        <Input onBlur={handleBlur} err={errors.email} classStyle = {errors.email && touched.email?"border-red-500":"border-gray-600"} id="email" value={values.email} onChange={handleChange} type="email" placeholder="Enter your email" label="Email Address" />
-        <Input onBlur={handleBlur} err={errors.password} classStyle = {errors.password && touched.password?"border-red-500":"border-gray-600"} id="password" value={values.password} onChange={handleChange} type="password" placeholder="Enter your password" label="Password" />
-
-       
+        <Input
+          onBlur={handleBlur}
+          err={errors.email}
+          classStyle={
+            errors.email && touched.email ? "border-red-500" : "border-gray-600"
+          }
+          id="email"
+          value={values.email}
+          onChange={handleChange}
+          type="email"
+          placeholder="Enter your email"
+          label="Email Address"
+        />
+        <div className=" flex justify-between items-center w-full relative">
+          <Input
+            onBlur={handleBlur}
+            err={errors.password}
+            classStyle={
+              errors.password && touched.password
+                ? "border-red-500"
+                : "border-gray-600"
+            }
+            id="password"
+            value={values.password}
+            onChange={handleChange}
+            type={eye ? "password" : "text"}
+            placeholder="Create Password"
+            label="Password"
+          />
+          <div
+            onClick={() => {
+              setEye(!eye);
+            }}
+            className=" absolute px-6 cursor-pointer flex justify-center items-center text-xl p-4 top-[1.70rem] right-0 rounded-lg text-white  "
+          >
+            {eye ? <GoEyeClosed /> : <FaEye />}
+          </div>
+        </div>
 
         <div className="flex items-center justify-between pb-4 ">
           <div className="flex items-center">
-            <input id="Remember" type="checkbox" onChange={handleChange} className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded" required/>
-            <label className="ml-2 block text-sm text-gray-400">Remember me</label>
+            <input
+              id="Remember"
+              type="checkbox"
+              onChange={handleChange}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded"
+              required
+            />
+            <label className="ml-2 block text-sm text-gray-400">
+              Remember me
+            </label>
           </div>
-          <a href="#" className="text-sm text-blue-500 hover:text-blue-400">Forgot password?</a>
+          <Link
+            to={"/auth/account/reset"}
+            className="text-sm text-blue-500 hover:text-blue-400"
+          >
+            Forgot password?
+          </Link>
         </div>
 
-        <button disabled={isSubmitting} type="submit" className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all">Sign In</button>
+        <button
+          disabled={isSubmitting}
+          type="submit"
+          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all"
+        >
+          Sign In
+        </button>
       </form>
 
       {/* <!-- Social Login --> */}

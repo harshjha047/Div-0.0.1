@@ -1,15 +1,31 @@
 import Input from "./Input";
 import { useFormik } from "formik";
 import { RegisterSchema } from "./AuthSchema";
-import { useRef } from "react";
-
-const onSubmit = (values, actions) => {
-  console.log(values);
-  console.log(actions);
-  actions.resetForm();
-};
+import { useRef, useState } from "react";
+import axios from "axios";
+import { useAuth } from "../../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { GoEyeClosed } from "react-icons/go";
+import { FaEye } from "react-icons/fa";
 
 function SignUp() {
+  let naviagte = useNavigate();
+  const {
+    genrateOtp,
+    setGeneratedOtp,
+    setPreRegisterUserData,
+  } = useAuth();
+
+  const onSubmit = async (values, actions) => {
+    actions.resetForm();
+    let genOtp = genrateOtp();
+    setGeneratedOtp(genOtp);
+    toast.success(`Otp has sent to ${values.email}`);
+    setPreRegisterUserData(values);
+    naviagte("/auth/account/validation");
+  };
+
   const {
     values,
     handleChange,
@@ -20,16 +36,16 @@ function SignUp() {
     errors,
   } = useFormik({
     initialValues: {
-      username: "",
+      name: "",
       password: "",
       confirmPassword: "",
-      phoneNumber: "",
       email: "",
     },
     validationSchema: RegisterSchema,
     onSubmit,
   });
-  console.log(values, errors);
+
+  const [eye, setEye] = useState(true);
 
   return (
     <div id="signup-form" className="bg-gray-800 rounded-lg p-8 shadow-lg">
@@ -39,16 +55,15 @@ function SignUp() {
       </div>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
-       
         <Input
-          err={errors.username}
+          err={errors.name}
           classStyle={
-            errors.username && touched.username
+            errors.name && touched.name
               ? "border-red-500"
               : "border-gray-600"
           }
-          id="username"
-          value={values.username}
+          id="name"
+          value={values.name}
           onChange={handleChange}
           onBlur={handleBlur}
           type="text"
@@ -69,51 +84,56 @@ function SignUp() {
           label="Email Address"
         />
 
-        {/* <Input
-          onBlur={handleBlur}
-          err={errors.phoneNumber}
-          classStyle={
-            errors.phoneNumber && touched.phoneNumber
-              ? "border-red-500"
-              : "border-gray-600"
-          }
-          id="phoneNumber"
-          value={values.phoneNumber}
-          onChange={handleChange}
-          type="tel"
-          placeholder="Enter phone number"
-          label="Phone Number"
-        /> */}
-        <Input
-          onBlur={handleBlur}
-          err={errors.password}
-          classStyle={
-            errors.password && touched.password
-              ? "border-red-500"
-              : "border-gray-600"
-          }
-          id="password"
-          value={values.password}
-          onChange={handleChange}
-          type="password"
-          placeholder="Create Password"
-          label="Password"
-        />
-        <Input
-          onBlur={handleBlur}
-          err={errors.confirmPassword}
-          classStyle={
-            errors.confirmPassword && touched.confirmPassword
-              ? "border-red-500"
-              : "border-gray-600"
-          }
-          id="confirmPassword"
-          value={values.confirmPassword}
-          onChange={handleChange}
-          type="password"
-          placeholder="Confirm Password"
-          label="Confirm Password"
-        />
+        <div className=" flex justify-between items-center w-full relative">
+          <Input
+            onBlur={handleBlur}
+            err={errors.password}
+            classStyle={
+              errors.password && touched.password
+                ? "border-red-500"
+                : "border-gray-600"
+            }
+            id="password"
+            value={values.password}
+            onChange={handleChange}
+            type={eye ? "password" : "text"}
+            placeholder="Create Password"
+            label="Password"
+          />
+          <div
+            onClick={() => {
+              setEye(!eye);
+            }}
+            className=" absolute px-6 cursor-pointer flex justify-center items-center text-xl p-4 top-[1.70rem] right-0 rounded-lg text-white  "
+          >
+            {eye ? <GoEyeClosed /> : <FaEye />}
+          </div>
+        </div>
+        <div className=" flex justify-between items-center w-full  relative">
+          <Input
+            onBlur={handleBlur}
+            err={errors.confirmPassword}
+            classStyle={
+              errors.confirmPassword && touched.confirmPassword
+                ? "border-red-500"
+                : "border-gray-600 "
+            }
+            id="confirmPassword"
+            value={values.confirmPassword}
+            onChange={handleChange}
+            type={eye ? "password" : "text"}
+            placeholder="Confirm Password"
+            label="Confirm Password"
+          />{" "}
+          <div
+            onClick={() => {
+              setEye(!eye);
+            }}
+            className=" absolute px-6 cursor-pointer flex justify-center items-center text-xl p-4 top-[1.70rem] right-0 rounded-lg text-white  "
+          >
+            {eye ? <GoEyeClosed /> : <FaEye />}
+          </div>
+        </div>
 
         <div className="flex items-center">
           <input

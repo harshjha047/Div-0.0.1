@@ -12,6 +12,7 @@ function NewCollections() {
       <section className="container mx-auto px-4  grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {FreshArrivals.map((e, i) => {
           return (
+            <div key={i} className="">
             <ProductCard
               id={e._id}
               brandLogo={e.brandLogo}
@@ -21,6 +22,7 @@ function NewCollections() {
               name={e.name}
               price={e.price}
             />
+            </div>
           );
         })}
       </section>

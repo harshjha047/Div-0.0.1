@@ -10,9 +10,9 @@ function Product() {
         
 
       <section className="container mx-auto px-4 mt-[18vh] grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {data.map((e, i) => (
+        {data?.map((e, i) => (
           <ProductCard
-          key={i}
+            key={i}
             id={e._id}
             brandLogo={e.brandLogo}
             brand={e.brand}
