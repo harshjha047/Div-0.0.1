@@ -4,7 +4,7 @@ import api, { setAccessToken, clearAccessToken } from "./api";
 const authService = {
   register: async (payload) => {
     // payload: { name, email, password }
-    const { data } = await api.post("/users/register", payload);
+    const { data } = await api.post("/users/register", payload,{withCredentials: true});
     return data;
   },
 

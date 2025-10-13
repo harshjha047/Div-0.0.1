@@ -41,7 +41,7 @@ function OTPvalidation() {
         if (location.pathname == "/auth/account/validation") {
           register(preRegisterUserData);
           toast.success("User Registered Successfully");
-          naviagte("/profile/info");
+          naviagte("/");
         } else if (location.pathname == "/auth/account/reset/validation") {
           naviagte("/auth/account/reset/create");
           toast.success("OTP verified");

@@ -1,8 +1,11 @@
 // src/services/api.js
 import axios from "axios";
 
+console.log(import.meta.env.VITE_API_BASE_URL);
+
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
+  baseURL: "https://backend-1-0-0-r7to.onrender.com/api",
   headers: { "Content-Type": "application/json" },
   withCredentials: true, // include cookies for refresh tokens if backend supports
 });
