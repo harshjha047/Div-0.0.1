@@ -2,7 +2,7 @@ import React from "react";
 import { useProfile } from "../../Contexts/ProfileContext";
 
 function Address(props) {
-  const { getProfileData,axiosInstance } = useProfile();
+  const { getProfileData,axiosInstance,LoadProfileData } = useProfile();
 //   console.log();
   
 //   const { label, street, city, state, zip, country, isDefault } = props?.data;
@@ -10,6 +10,7 @@ function Address(props) {
     try{
        const {data:res}=await axiosInstance.delete(`/users/addresses/${id}`)
        console.log(res);
+       await LoadProfileData()
        
     }catch(err){
       console.log(err);

@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 function ChangePasswordProfile() {
   const { axiosInstance, setResetPasswordData } =useAuth();
-  const { getProfileData } =useProfile();
+  const { getProfileData,LoadProfileData } =useProfile();
   
   const [emailValue, setEmailValue] = useState(getProfileData?.email);
 
@@ -31,6 +31,7 @@ function ChangePasswordProfile() {
       );
       setResetPasswordData(inputBox);
       toast.success("Password reset successful");
+      await LoadProfileData()
       setInputBox(initState)
     } catch (err) {
       toast.error("Server error");

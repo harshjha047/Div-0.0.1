@@ -33,6 +33,25 @@ const authService = {
     const { data } = await api.get("/users/me");
     return data;
   },
+
+  getWishlist: async () => {
+    // Fetch user's wishlist
+    const { data } = await api.get("/users/wishlist");
+    return data;
+  },
+
+  addToWishlist: async (productId) => {
+    // Add a product to wishlist
+    const { data } = await api.post(`/users/wishlist/${ productId }`);
+    return data;
+  },
+
+  removeFromWishlist: async (productId) => {
+    // Remove product from wishlist
+    const { data } = await api.delete(`/users/wishlist/${productId}`);
+    return data;
+  },
+
 };
 
 export default authService;

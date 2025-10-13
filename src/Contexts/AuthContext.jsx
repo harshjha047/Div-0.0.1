@@ -2,6 +2,9 @@ import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import authService from "../services/authService";
 import { Children } from "react";
+import { useProfile } from "./ProfileContext";
+import { useShop } from "./ShopContext";
+
 
 const AuthApi = createContext();
 
@@ -11,8 +14,12 @@ export const AuthProvider = ({ children }) => {
   const [userEnteredOtp, setUserEnterOtp] = useState(0);
   const [preRegisterUserData, setPreRegisterUserData] = useState(null);
   const [resetPasswordData, setResetPasswordData] = useState(null);
+  
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const {LoadProfileData,setGetProfileData} = useProfile();
+  const {loadCart,setCart}=useShop()
+  
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:5000/api",
@@ -21,23 +28,29 @@ export const AuthProvider = ({ children }) => {
   let genrateOtp = () => {
     return Math.floor(Math.random() * 8999) + 1000;
   };
-  useEffect(() => {
-    // responceGet();
-  }, []);
-
   const login = async (info) => {
     const data = await authService.login(info);
-    setUser(data.user);
+    setUser(data);
+    await LoadProfileData()
+    await loadCart()
   };
 
   const register = async (info) => {
     const data = await authService.register(info);
-    setUser(data.user);
+    setUser(data);
+    await LoadProfileData()
+    await loadCart()
   };
 
   const logout = async () => {
     await authService.logout();
     setUser(null);
+
+    await LoadProfileData()
+    await loadCart()
+
+    setGetProfileData(null)
+    setCart([])
   };
 
   return (

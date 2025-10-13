@@ -41,24 +41,30 @@ const router = createBrowserRouter(
       <Route path="T&C" element={<TC />}></Route>
       <Route path="auth/account/validation" element={<OTPvalidation />}></Route>
       <Route path="auth/account/reset" element={<ResetPasswort />}></Route>
-      <Route path="auth/account/reset/validation" element={<OTPvalidation />}></Route>
-      <Route path="auth/account/reset/create" element={<CreateNewPassword />}></Route>
+      <Route
+        path="auth/account/reset/validation"
+        element={<OTPvalidation />}
+      ></Route>
+      <Route
+        path="auth/account/reset/create"
+        element={<CreateNewPassword />}
+      ></Route>
       <Route element={<ProtectedWrapper />}>
-      <Route path="profile/:tab" element={<Profile />}></Route>
-      <Route path="profile/Info" element={<Profile />}></Route>
-      <Route path="profile/Info/address/add" element={<AddAddress />}></Route>
-      <Route path="cart" element={<Cart />}></Route>
+        <Route path="profile/:tab" element={<Profile />}></Route>
+        <Route path="profile/Info" element={<Profile />}></Route>
+        <Route path="profile/Info/address/add" element={<AddAddress />}></Route>
+        <Route path="cart" element={<Cart />}></Route>
       </Route>
       <Route path="*" element={<NotFound />} />
     </Route>
   )
 );
 createRoot(document.getElementById("root")).render(
-  <AuthProvider>
-    <ProfileProvider>
-      <ShopApi>
+  <ProfileProvider>
+    <ShopApi>
+      <AuthProvider>
         <RouterProvider router={router} />
-      </ShopApi>
-    </ProfileProvider>
-  </AuthProvider>
+      </AuthProvider>
+    </ShopApi>
+  </ProfileProvider>
 );

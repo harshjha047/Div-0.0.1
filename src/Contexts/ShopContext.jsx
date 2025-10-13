@@ -9,7 +9,7 @@ import productService from "../services/productService";
 const ShopContext = createContext();
 
 export const ShopApi = ({ children }) => {
-  let { getProfileData } = useProfile();
+  let { getProfileData,LoadProfileData } = useProfile();
   const [cart, setCart] = useState([]);
   const [data, setdata] = useState();
   const [totalPrice, setTotalPrice] = useState();
@@ -32,7 +32,8 @@ export const ShopApi = ({ children }) => {
   const deleteCart = async (cartItem) => {
     try {
       const { data: res } = await axiosInstance.post("/cart/delete", cartItem);
-      loadCart();
+      await loadCart();
+      await LoadProfileData()
       toast.success("deleted Item!");
     } catch (err) {
       console.error("Add to cart error:", err);
@@ -57,6 +58,7 @@ export const ShopApi = ({ children }) => {
       await cartService.addToCart(cartItem);
       toast.success("Item added to cart!");
       await loadCart();
+      await LoadProfileData()
     } catch (err) {
       console.error("Add to cart error:", err);
       toast.error("Failed to add item to cart.");
@@ -67,6 +69,7 @@ export const ShopApi = ({ children }) => {
     try {
       await cartService.removeItem(cartItem);
       await loadCart();
+      await LoadProfileData()
       toast.success("Item removed from cart!");
     } catch (err) {
       console.error("Add to cart error:", err);

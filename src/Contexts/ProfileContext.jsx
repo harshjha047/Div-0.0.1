@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import authService from "../services/authService";
 
 const ProfileContext = createContext();
 
 export const ProfileProvider = ({ children }) => {
   const [getProfileData, setGetProfileData] = useState();
+  const [getWishlistData, setGetWishlistData] = useState();
   const [updateProfileData, setUpdateProfileData] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -14,20 +16,56 @@ export const ProfileProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    const LoadProfileData = async () => {
-      try {
-        const response = await axiosInstance.get("/users/me", {
-          headers: { "Cache-Control": "no-cache" },
-        });
-        setGetProfileData(response?.data?.user);
-      } catch (err) {
-        console.log("Profile Error:", err);
-      } finally{
-        setLoading(false);
-      }
-    };
     LoadProfileData();
   }, []);
+  const LoadWishlistData = async () => {
+    try {
+      const data = await authService.getWishlist();
+      console.log(data);
+      setGetWishlistData(data);
+    } catch (err) {
+      console.log("Profile Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const LoadProfileData = async () => {
+    try {
+      const data = await authService.getProfile();
+      setGetProfileData(data?.user);
+      await LoadWishlistData()
+    } catch (err) {
+      console.log("Profile Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addWishlistData = async (info) => {
+    try {
+      const data = await authService.addToWishlist(info);
+      console.log(data);
+      setGetWishlistData(data);
+      await LoadProfileData()
+    } catch (err) {
+      console.log("Profile Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+    const removeWishlistData = async (info) => {
+    try {
+      const data = await authService.removeFromWishlist(info);
+      console.log(data);
+      setGetWishlistData(data);
+      await LoadProfileData()
+    } catch (err) {
+      console.log("Profile Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <ProfileContext.Provider
@@ -38,6 +76,12 @@ export const ProfileProvider = ({ children }) => {
         updateProfileData,
         setUpdateProfileData,
         loading,
+        LoadProfileData,
+        LoadWishlistData,
+        addWishlistData,
+        removeWishlistData,
+        getWishlistData, 
+        setGetWishlistData,
       }}
     >
       {children}

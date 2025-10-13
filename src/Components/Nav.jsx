@@ -8,12 +8,15 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useShop } from "../Contexts/ShopContext.jsx";
 import { useProfile } from "../Contexts/ProfileContext.jsx";
+import { useAuth } from "../Contexts/AuthContext.jsx";
 import { CiLogin } from "react-icons/ci";
 
 function Nav() {
   let { cart } = useShop();
   const { getProfileData} = useProfile();
-
+  const {user}=useAuth()
+ console.log(user);
+  
   // console.log(cart);
   
   let [searchBar, setSearchBar] = useState(false);

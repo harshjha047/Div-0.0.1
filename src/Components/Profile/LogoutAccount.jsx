@@ -6,18 +6,14 @@ import axios from 'axios';
 import { useAuth } from '../../Contexts/AuthContext';
 
 function LogoutAccount() {
-    const { setGetProfileData } = useProfile(); // assuming this sets user data
+    const { setGetProfileData,LoadProfileData } = useProfile(); // assuming this sets user data
     const {logout}=useAuth()
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      // await axios.post(
-      //   "http://localhost:5000/api/users/logout",
-      //   {},
-      //   { withCredentials: true } // important for cookies
-      // );
       logout()
       setGetProfileData(null);
+      await LoadProfileData()
       toast.success("Logged out successfully");
       navigate("/");
     } catch (error) {

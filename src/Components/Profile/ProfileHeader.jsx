@@ -35,7 +35,7 @@ function ProfileHeader() {
             {/* <!-- Quick Stats --> */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <QuickStats link={""} css="" value={getProfileData?.orders?.length} name="Orders"/>
-              <QuickStats link={""} css="text-blue-400" value={getProfileData?.wishlist?.length} name="Wishlist"/>
+              <QuickStats link={"/profile/WishlistTab"} css="text-blue-400" value={getProfileData?.wishlist?.length} name="Wishlist"/>
               <QuickStats link={""} css="text-green-400" value='0' name="Total Spent"/>
               <QuickStats link={"/cart"} css="text-purple-400" value={cart?.length} name="Cart"/>
             </div>

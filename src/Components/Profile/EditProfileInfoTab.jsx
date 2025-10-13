@@ -4,7 +4,7 @@ import { useProfile } from "../../Contexts/ProfileContext";
 import toast from "react-hot-toast";
 
 function EditProfileInfoTab() {
-  const { getProfileData, axiosInstance,setUpdateProfileData } = useProfile();
+  const { getProfileData, axiosInstance,setUpdateProfileData,LoadProfileData } = useProfile();
   const initState = {
     email: getProfileData?.email || "",
     phone: getProfileData?.phone || "",
@@ -27,6 +27,7 @@ function EditProfileInfoTab() {
       console.log(res);
       toast.success("User Registered Successfully");
       setUpdateProfileData(false)
+      await LoadProfileData()
     } catch (err) {
       console.log(err);
     }

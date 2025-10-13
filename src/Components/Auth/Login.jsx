@@ -6,6 +6,7 @@ import { useState } from "react";
 import { GoEyeClosed } from "react-icons/go";
 import { FaEye } from "react-icons/fa";
 import { useAuth } from "../../Contexts/AuthContext";
+import { useProfile } from "../../Contexts/ProfileContext";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 

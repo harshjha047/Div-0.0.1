@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 function AddAddress() {
   let naviagte = useNavigate();
 
-  const { axiosInstance } = useProfile();
+  const { axiosInstance,LoadProfileData } = useProfile();
   const init = {
     label: "Home",
     street: "",
@@ -28,6 +28,7 @@ function AddAddress() {
       const { data: res } = await axiosInstance.post("/users/address", createAddress);
       console.log(res);
       toast.success("Address Registered Successfully");
+      await LoadProfileData()
       naviagte("/profile/info")
     } catch (err) {
       console.log(err);
