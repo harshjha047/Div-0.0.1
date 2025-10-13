@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { useProfile } from "../../Contexts/ProfileContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import api from "../../services/api";
 
 function AddAddress() {
   let naviagte = useNavigate();
 
-  const { axiosInstance,LoadProfileData } = useProfile();
+  const {LoadProfileData } = useProfile();
   const init = {
     label: "Home",
     street: "",
@@ -25,7 +26,7 @@ function AddAddress() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data: res } = await axiosInstance.post("/users/address", createAddress);
+      const { data: res } = await api.post("/users/address", createAddress);
       console.log(res);
       toast.success("Address Registered Successfully");
       await LoadProfileData()

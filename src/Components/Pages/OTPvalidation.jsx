@@ -11,12 +11,11 @@ function OTPvalidation() {
   const {
     genratedOTP,
     preRegisterUserData,
-    axiosInstance,
     resetPasswordData,
     register,
   } = useAuth();
 
-  // console.log(preRegisterUserData);
+  // console.log(preRegisterUserData); 
 
   const initState = { Box: "" };
   const [inputBox, setInputBox] = useState(initState);

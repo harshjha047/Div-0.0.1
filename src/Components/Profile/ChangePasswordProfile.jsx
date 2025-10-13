@@ -5,7 +5,7 @@ import { useProfile } from "../../Contexts/ProfileContext";
 import toast from "react-hot-toast";
 
 function ChangePasswordProfile() {
-  const { axiosInstance, setResetPasswordData } =useAuth();
+  const {  setResetPasswordData } =useAuth();
   const { getProfileData,LoadProfileData } =useProfile();
   
   const [emailValue, setEmailValue] = useState(getProfileData?.email);
@@ -25,7 +25,7 @@ function ChangePasswordProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const responce = await axiosInstance.patch(
+      const responce = await api.patch(
         "/users/reset-password",
         inputBox
       );

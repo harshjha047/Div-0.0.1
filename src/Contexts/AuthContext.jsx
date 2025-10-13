@@ -21,10 +21,7 @@ export const AuthProvider = ({ children }) => {
   const {loadCart,setCart}=useShop()
   
 
-  const axiosInstance = axios.create({
-    baseURL: "http://localhost:5000/api",
-    withCredentials: true,
-  });
+
   let genrateOtp = () => {
     return Math.floor(Math.random() * 8999) + 1000;
   };
@@ -65,7 +62,6 @@ export const AuthProvider = ({ children }) => {
         setPreRegisterUserData,
         userData,
         setUserData,
-        axiosInstance,
         resetPasswordData,
         setResetPasswordData,
         user,

@@ -3,19 +3,12 @@ import Input from "./Input";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../../Contexts/AuthContext";
+import api from "../../services/api";
 
 function ResetPasswort() {
   const navigate = useNavigate();
-  const { genratedOTP,
+  const {
         setGeneratedOtp,
-        userEnteredOtp,
-        setUserEnterOtp,
-        preRegisterUserData,
-        setPreRegisterUserData,
-        userData,
-        setUserData,
-        axiosInstance,
-        resetPasswordData, 
         setResetPasswordData,genrateOtp } = useAuth();
   const initState = { email: "" };
   const [inputBox, setInputBox] = useState(initState);
@@ -31,9 +24,9 @@ function ResetPasswort() {
     e.preventDefault();
 
     try {
-      const responce = await axiosInstance.post(
+      const responce = await api.post(
         "/users/request-reset",
-        inputBox
+        inputBox,{ withCredentials: true }
       );
       setResetPasswordData(inputBox)
       console.log(responce.data);

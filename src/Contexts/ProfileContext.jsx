@@ -10,10 +10,6 @@ export const ProfileProvider = ({ children }) => {
   const [updateProfileData, setUpdateProfileData] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const axiosInstance = axios.create({
-    baseURL: "http://localhost:5000/api", // your backend URL
-    withCredentials: true,
-  });
 
   useEffect(() => {
     LoadProfileData();
@@ -72,7 +68,6 @@ export const ProfileProvider = ({ children }) => {
       value={{
         getProfileData,
         setGetProfileData,
-        axiosInstance,
         updateProfileData,
         setUpdateProfileData,
         loading,

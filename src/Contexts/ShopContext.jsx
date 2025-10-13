@@ -5,19 +5,15 @@ import toast from "react-hot-toast";
 import { useProfile } from "./ProfileContext";
 import cartService from "../services/cartService";
 import productService from "../services/productService";
+import api from "../services/api";
 
 const ShopContext = createContext();
 
 export const ShopApi = ({ children }) => {
-  let { getProfileData,LoadProfileData } = useProfile();
+  let {LoadProfileData } = useProfile();
   const [cart, setCart] = useState([]);
   const [data, setdata] = useState();
   const [totalPrice, setTotalPrice] = useState();
-
-  const axiosInstance = axios.create({
-    baseURL: "http://localhost:5000/api",
-    withCredentials: true,
-  });
 
   const loadCart = async () => {
     try {
@@ -31,7 +27,7 @@ export const ShopApi = ({ children }) => {
 
   const deleteCart = async (cartItem) => {
     try {
-      const { data: res } = await axiosInstance.post("/cart/delete", cartItem);
+      const { data: res } = await api.post("/cart/delete", cartItem);
       await loadCart();
       await LoadProfileData()
       toast.success("deleted Item!");
@@ -86,7 +82,6 @@ export const ShopApi = ({ children }) => {
         addToCart,
         RemoveFromCart,
         totalPrice,
-        axiosInstance,
         deleteCart,
         loadCart,
       }}

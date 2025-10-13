@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import AddressesTab from "./AddressesTab";
 import { useProfile } from "../../Contexts/ProfileContext";
 import toast from "react-hot-toast";
+import api from "../../services/api";
 
 function EditProfileInfoTab() {
-  const { getProfileData, axiosInstance,setUpdateProfileData,LoadProfileData } = useProfile();
+  const { getProfileData,setUpdateProfileData,LoadProfileData } = useProfile();
   const initState = {
     email: getProfileData?.email || "",
     phone: getProfileData?.phone || "",
@@ -23,7 +24,7 @@ function EditProfileInfoTab() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const {data:res} = await axiosInstance.patch("/users/me", inputBox);
+      const {data:res} = await api.patch("/users/me", inputBox);
       console.log(res);
       toast.success("User Registered Successfully");
       setUpdateProfileData(false)

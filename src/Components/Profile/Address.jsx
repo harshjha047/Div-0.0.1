@@ -1,14 +1,15 @@
 import React from "react";
 import { useProfile } from "../../Contexts/ProfileContext";
+import api from "../../services/api";
 
 function Address(props) {
-  const { getProfileData,axiosInstance,LoadProfileData } = useProfile();
+  const { getProfileData,LoadProfileData } = useProfile();
 //   console.log();
   
 //   const { label, street, city, state, zip, country, isDefault } = props?.data;
  const deleteAddres=async(id)=>{
     try{
-       const {data:res}=await axiosInstance.delete(`/users/addresses/${id}`)
+       const {data:res}=await api.delete(`/users/addresses/${id}`)
        console.log(res);
        await LoadProfileData()
        

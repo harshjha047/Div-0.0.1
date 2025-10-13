@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
 import Input from "./Input";
 import toast from "react-hot-toast";
+import api from "../../services/api";
 
 function CreateNewPassword() {
   const navigate = useNavigate();
-  const { axiosInstance, setResetPasswordData, genrateOtp, setGeneratedOtp } =
+  const {setResetPasswordData, genrateOtp, setGeneratedOtp } =
     useAuth();
   const initState = { email: "", newPassword: "", confirmPassword: "" };
   const [inputBox, setInputBox] = useState(initState);
@@ -22,10 +23,7 @@ function CreateNewPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const responce = await axiosInstance.patch(
-        "/users/reset-password",
-        inputBox
-      );
+      const responce = await api.patch("/users/reset-password",inputBox,{ withCredentials: true });
       setResetPasswordData(inputBox);
       console.log(responce.data);
       let genOtp = genrateOtp();
