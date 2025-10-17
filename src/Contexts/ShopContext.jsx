@@ -10,10 +10,11 @@ import api from "../services/api";
 const ShopContext = createContext();
 
 export const ShopApi = ({ children }) => {
-  let {LoadProfileData } = useProfile();
+  let { LoadProfileData } = useProfile();
   const [cart, setCart] = useState([]);
   const [data, setdata] = useState();
   const [totalPrice, setTotalPrice] = useState();
+  const [search, setSearch] = useState();
 
   const loadCart = async () => {
     try {
@@ -29,7 +30,7 @@ export const ShopApi = ({ children }) => {
     try {
       const { data: res } = await api.post("/cart/delete", cartItem);
       await loadCart();
-      await LoadProfileData()
+      await LoadProfileData();
       toast.success("deleted Item!");
     } catch (err) {
       console.error("Add to cart error:", err);
@@ -49,12 +50,13 @@ export const ShopApi = ({ children }) => {
       console.log(err);
     }
   };
+
   const addToCart = async (cartItem) => {
     try {
       await cartService.addToCart(cartItem);
       toast.success("Item added to cart!");
       await loadCart();
-      await LoadProfileData()
+      await LoadProfileData();
     } catch (err) {
       console.error("Add to cart error:", err);
       toast.error("Failed to add item to cart.");
@@ -65,13 +67,36 @@ export const ShopApi = ({ children }) => {
     try {
       await cartService.removeItem(cartItem);
       await loadCart();
-      await LoadProfileData()
+      await LoadProfileData();
       toast.success("Item removed from cart!");
     } catch (err) {
       console.error("Add to cart error:", err);
       toast.error("Failed to remove item from cart.");
     }
   };
+
+  const addReview = async (e) => {
+    try {
+      await productService.addReview(e);
+      await LoadProfileData();
+    } catch (err) {
+      console.error( err);
+      toast.error("something went wrong");
+    }
+  };
+
+  const removeReview = async (e) => {
+    try {
+      await productService.removeReview(e);
+      await LoadProfileData();
+      toast.success("Item removed from cart!");
+    } catch (err) {
+      console.error( err);
+      toast.error("something went wrong");
+    }
+  };
+
+  let [filteredData, setFilteredData] = useState(data);
 
   return (
     <ShopContext.Provider
@@ -84,6 +109,13 @@ export const ShopApi = ({ children }) => {
         totalPrice,
         deleteCart,
         loadCart,
+        search,
+        setSearch,
+        filteredData,
+        setFilteredData,
+        addReview,
+        removeReview,
+        fetchAllProducts,
       }}
     >
       {children}

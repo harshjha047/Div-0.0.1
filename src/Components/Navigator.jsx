@@ -1,7 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useProfile } from "../Contexts/ProfileContext";
 
 function Navigator() {
+    const { getProfileData ,loading} = useProfile();
+  
   const element = [
     { name: "Home", url: "/" },
     { name: "Product", url: "/product" },
@@ -17,6 +20,9 @@ function Navigator() {
           </NavLink>
         );
       })}
+      { getProfileData?.role=="admin" && <NavLink to={`/admin/products`} className={()=>`m-4 font-semibold hover:text-[#ffffff] cursor-pointer navidatorItem flex flex-col justify-center items-center`}>
+         Dashboard <div className={`navidatorItemLine h-[2px] bg-white`}></div> 
+          </NavLink>}
     </div>
   );
 }

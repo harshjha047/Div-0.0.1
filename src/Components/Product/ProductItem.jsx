@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+// import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { useShop } from '../../Contexts/ShopContext';
 import BreadCrump from './BreadCrump/BreadCrump';
 import { IoStar } from "react-icons/io5";
+import ReviewInput from './Review/ReviewInput';
+import ReviewOutput from './Review/ReviewOutput';
+import { useProfile } from '../../Contexts/ProfileContext';
 
 function ProductItem() {
   const {ProductId}=useParams()
     const navigator = useNavigate()
   const {data,cart,addToCart, RemoveFromCart}= useShop()
   const product = data?.find((e)=>e?._id===ProductId)
+    const { getProfileData } = useProfile();
   
   const CartItem={
     productId:ProductId,
@@ -66,6 +70,7 @@ const handleChange = (e) => {
     addToCart(cartItem)
     navigator("/cart")
    }
+console.log(product);
 
     
   return (<>
@@ -198,15 +203,14 @@ const handleChange = (e) => {
       </div>
       {tog?<div className="py-8">
         <div className="text-gray-300 space-y-4">
-          <p>{product?.description}</p>
+          <pre>{product?.description}</pre>
         </div>
       </div>: <div className="py-8">
         <div className="text-gray-300 space-y-4">
+          {getProfileData &&  <ReviewInput id={ProductId}/>  }
           {product?.reviews?.map((e,i)=>
-          <div key={i} className="w-full border  rounded-2xl p-4">
-            <div className="p-2 flex justify-between">{e?.name} <span>Rate {e?.rating} <div className="text-yellow-400 inline-block"><IoStar/></div></span></div>
-            <div className="border w-full rounded-md p-2">{e?.comment}</div>
-          </div>
+          <ReviewOutput data={{e,i,ProductId}}/>
+
           )}
         </div>
       </div>}

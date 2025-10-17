@@ -5,7 +5,7 @@ import authService from "../services/authService";
 const ProfileContext = createContext();
 
 export const ProfileProvider = ({ children }) => {
-  const [getProfileData, setGetProfileData] = useState();
+  const [getProfileData, setGetProfileData] = useState(null);
   const [getWishlistData, setGetWishlistData] = useState();
   const [updateProfileData, setUpdateProfileData] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,6 @@ export const ProfileProvider = ({ children }) => {
   const LoadWishlistData = async () => {
     try {
       const data = await authService.getWishlist();
-      console.log(data);
       setGetWishlistData(data);
     } catch (err) {
       console.log("Profile Error:", err);
@@ -32,7 +31,7 @@ export const ProfileProvider = ({ children }) => {
       setGetProfileData(data?.user);
       await LoadWishlistData()
     } catch (err) {
-      console.log("Profile Error:", err);
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -41,7 +40,6 @@ export const ProfileProvider = ({ children }) => {
   const addWishlistData = async (info) => {
     try {
       const data = await authService.addToWishlist(info);
-      console.log(data);
       setGetWishlistData(data);
       await LoadProfileData()
     } catch (err) {
@@ -53,7 +51,6 @@ export const ProfileProvider = ({ children }) => {
     const removeWishlistData = async (info) => {
     try {
       const data = await authService.removeFromWishlist(info);
-      console.log(data);
       setGetWishlistData(data);
       await LoadProfileData()
     } catch (err) {

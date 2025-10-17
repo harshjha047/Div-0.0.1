@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
   let genrateOtp = () => {
     return Math.floor(Math.random() * 8999) + 1000;
   };
+  
   const login = async (info) => {
     const data = await authService.login(info);
     setUser(data);

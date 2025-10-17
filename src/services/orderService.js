@@ -1,5 +1,8 @@
 // src/services/orderService.js
 import api from "./api";
+import { loadStripe } from "@stripe/stripe-js";
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+
 
 const orderService = {
   getUserOrders: async () => {
@@ -19,6 +22,12 @@ const orderService = {
 
   trackOrder: async (trackingId) => {
     const { data } = await api.get(`/orders/track/${trackingId}`);
+    return data;
+  },
+  createCheckoutSession: async (e) => {
+    const stripe = await stripePromise;
+    const { data } = await api.post(`/payment/create-checkout-session`, e);
+    window.location.href = data.url; // Redirect to Stripe checkout
     return data;
   },
 

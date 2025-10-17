@@ -19,3 +19,48 @@
 .navidatorItem:hover .navidatorItemLine{
   width: 100%;
 }
+.customScroller{
+  overflow-y:scroll ;
+}
+/* width */
+.customScroller::-webkit-scrollbar {
+  width: 0px;
+}
+
+/* Track */
+.customScroller::-webkit-scrollbar-track {
+  background: #c41c1ccb;
+}
+
+/* Handle */
+.customScroller::-webkit-scrollbar-thumb {
+  background: #ce4a4a;
+}
+
+/* Handle on hover */
+.customScroller::-webkit-scrollbar-thumb:hover {
+  background: #ad2727;
+}
+/* .itemCustomScroller{} */
+.itemCustomScroller{
+  overflow-x:scroll ;
+}
+/* width */
+.itemCustomScroller::-webkit-scrollbar {
+  height: 0px;
+}
+
+/* Track */
+.itemCustomScroller::-webkit-scrollbar-track {
+  background: #c41c1ccb;
+}
+
+/* Handle */
+.itemCustomScroller::-webkit-scrollbar-thumb {
+  background: #ce4a4a;
+}
+
+/* Handle on hover */
+.itemCustomScroller::-webkit-scrollbar-thumb:hover {
+  background: #ad2727;
+}

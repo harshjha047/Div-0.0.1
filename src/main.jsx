@@ -3,12 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import Auth from "./Components/Auth/Auth.jsx";
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import Product from "./Components/Product/Product.jsx";
 import Cart from "./Components/Cart/Cart.jsx";
 import Help from "./Components/Pages/Help.jsx";
@@ -27,33 +22,41 @@ import CreateNewPassword from "./Components/Auth/CreateNewPassword.jsx";
 import Profile from "./Components/Profile/Profile.jsx";
 import AddAddress from "./Components/Profile/AddAddress.jsx";
 import ProtectedWrapper from "./Components/ProtectedWrapper/ProtectedWrapper.jsx";
+import Dashboard from "./Components/Admin/Dashboard.jsx";
+import { AdminProvider } from "./Contexts/AdminContext.jsx";
+import UserDataField from "./Components/Admin/UserDataField.jsx";
+import ProductDataField from "./Components/Admin/ProductDataField.jsx";
+import IndivisualProductCard from "./Components/Admin/IndivisualProductCard.jsx";
+import PublicRoutes from "./Components/ProtectedWrapper/PublicRoutes.jsx";
+import { CheckoutProvider } from "./Contexts/PreLoaderContext.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route path="" element={<Home />}></Route>
-      <Route path="auth" element={<Auth />}></Route>
+      <Route path="" element={<PublicRoutes />}>
+        <Route path="auth" element={<Auth />}></Route>
+        <Route path="auth/account/validation" element={<OTPvalidation />}></Route>
+        <Route path="auth/account/reset" element={<ResetPasswort />}></Route>
+        <Route path="auth/account/reset/validation" element={<OTPvalidation />}></Route>
+        <Route path="auth/account/reset/create" element={<CreateNewPassword />}></Route>
+      </Route>
       <Route path="product" element={<Product />}></Route>
       <Route path="product/:brand" element={<ProductCat />}></Route>
       <Route path="product/Item/:ProductId" element={<ProductItem />}></Route>
       <Route path="help" element={<Help />}></Route>
       <Route path="aboutus" element={<AboutUs />}></Route>
       <Route path="T&C" element={<TC />}></Route>
-      <Route path="auth/account/validation" element={<OTPvalidation />}></Route>
-      <Route path="auth/account/reset" element={<ResetPasswort />}></Route>
-      <Route
-        path="auth/account/reset/validation"
-        element={<OTPvalidation />}
-      ></Route>
-      <Route
-        path="auth/account/reset/create"
-        element={<CreateNewPassword />}
-      ></Route>
       <Route element={<ProtectedWrapper />}>
         <Route path="profile/:tab" element={<Profile />}></Route>
         <Route path="profile/Info" element={<Profile />}></Route>
         <Route path="profile/Info/address/add" element={<AddAddress />}></Route>
         <Route path="cart" element={<Cart />}></Route>
+      </Route>
+      <Route path="admin" element={<Dashboard />}>
+        <Route path="users" element={<UserDataField />}></Route>
+        <Route path="products" element={<ProductDataField />}></Route>
+        <Route path="products/:id" element={<IndivisualProductCard />}></Route>
       </Route>
       <Route path="*" element={<NotFound />} />
     </Route>
@@ -62,9 +65,13 @@ const router = createBrowserRouter(
 createRoot(document.getElementById("root")).render(
   <ProfileProvider>
     <ShopApi>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <AdminProvider>
+        <CheckoutProvider>
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
+        </CheckoutProvider>
+      </AdminProvider>
     </ShopApi>
   </ProfileProvider>
 );

@@ -15,9 +15,6 @@ function Nav() {
   let { cart } = useShop();
   const { getProfileData} = useProfile();
   const {user}=useAuth()
- console.log(user);
-  
-  // console.log(cart);
   
   let [searchBar, setSearchBar] = useState(false);
   return (
@@ -29,7 +26,7 @@ function Nav() {
         <div className=" h-full flex items-center justify-center text-[#ffffffad]">
           <Navigator />
         </div>
-        {searchBar && (
+        {/* {searchBar && (
           <div className="text-black h-full flex items-center">
             <input
               list="search"
@@ -46,17 +43,17 @@ function Nav() {
               <option value="Vanilla"></option>
             </datalist>
           </div>
-        )}
+        )} */}
         <div className=" h-full flex items-center gap-3">
-          <div
+          {/* <div
             onClick={() => {
               setSearchBar(!searchBar);
             }}
             className=""
           >
             <Icon>{searchBar ? <IoMdClose /> : <IoIosSearch />}</Icon>
-          </div>
-        <NavLink to={"/cart"}><Icon>
+          </div> */}
+        <NavLink to={"/cart"} className={`fixed bottom-10 right-10 bg-white text-black p-3 border shadow-md rounded-lg`}><Icon>
             <IoCartOutline />
             {cart?.length > 0 && (
               <div className=" absolute h-3 w-3 text-[8px] font-semibold rounded-full top-1 bg-green-600 right-1 flex justify-center items-center ">
